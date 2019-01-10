@@ -4,7 +4,7 @@
 
 
   <div>
-    <router-view></router-view>
+    <router-view/>
     <!--底部导航-->
     <footer class="clearfix">
       <div

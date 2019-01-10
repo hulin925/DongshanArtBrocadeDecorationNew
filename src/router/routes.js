@@ -17,7 +17,7 @@ export default [
     children: [
       //首页
       {
-        path: '/',
+        path: '',
         name: 'Home',
         component: Home
       },
