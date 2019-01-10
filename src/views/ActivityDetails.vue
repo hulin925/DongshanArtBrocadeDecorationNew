@@ -18,7 +18,7 @@
 
 <script>
   export default {
-    name: "activity-details"
+    name: "activity-details",
   }
 </script>
 

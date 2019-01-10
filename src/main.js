@@ -2,11 +2,14 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import FastClick from 'fastclick'
-import '@/assets/css/reset.css' // global css
 import App from './App'
 import router from './router'
+
+import '@/assets/css/reset.css' // global css
+
 import '@/assets/css/index.less' // global css
 import '@/assets/css/common.less' // global css
+
 
 
 

@@ -7,7 +7,11 @@
     <header>东山艺锦装饰</header>
     <section>
       <div class="imgBox">
-        <img src="../assets/img/home/img.png" alt="">
+        <swiper v-model="swiperItemIndex" dots-position="center" :aspect-ratio="450/750">
+          <swiper-item class="swiper-demo-img" v-for="(item, index) in demo04_list" :key="index">
+            <img :src="item">
+          </swiper-item>
+        </swiper>
       </div>
       <!--导航区域-->
       <nav class="clearfix">
@@ -26,12 +30,12 @@
             <img src="../assets/img/home/calculator.png" alt="">
           </div>
           <div class="contentRight">
-            <div class="Designer">
+            <div class="Designer" @click="designer">
               <p class="firstText">预约设计师</p>
               <p class="twoText">一对一定制服务</p>
               <img src="../assets/img/home/designer.png" alt="">
             </div>
-            <div class="Housing">
+            <div class="Housing" @click="houseGroup">
               <p class="firstText">预约量房团</p>
               <p class="twoText">精准、高效、先进</p>
               <img src="../assets/img/home/apartment.png" alt="">
@@ -41,7 +45,7 @@
       </div>
 
       <!--别人家的装修-->
-      <div class="more">
+      <div class="more" @click="Case">
         <div class="moreContent">
           <div class="renovation">别人家的装修 <span class="caseList ">/ 精挑细选的案列</span></div>
           <span class="mores">更多 ></span>
@@ -71,9 +75,13 @@
 
       <!--独家策划-->
       <div class="plan">
-        <div class="renovation more">独家策划 <span class="caseList ">/ 最优惠的活动</span></div>
-        <ul class="planImg">
-
+        <div class="clearfix">
+          <div class="renovation more">独家策划 <span class="caseList ">/ 最优惠的活动</span></div>
+        </div>
+        <ul class="planImg clearfix">
+          <li v-for="item,index in 3">
+            <img src="../assets/img/home/Renovation.png" alt="">
+          </li>
         </ul>
       </div>
 
@@ -82,6 +90,7 @@
 </template>
 <script>
   import {mapGetters} from 'vuex'
+  import { Swiper, SwiperItem } from 'vux'
 
   export default {
     computed: mapGetters([]),
@@ -91,22 +100,22 @@
           {
             className: 'anLi',
             name: '客户案例',
-            routerName: 'HelloWorld',
+            routerName: 'Case',
           },
           {
             className: 'design',
             name: '设计师',
-            routerName: 'HelloWorld',
+            routerName: 'Designer',
           },
           {
             className: 'core',
             name: '核心优势',
-            routerName: 'HelloWorld',
+            routerName: 'Core',
           },
           {
             className: 'aboutMe',
             name: '关于我们',
-            routerName: 'HelloWorld',
+            routerName: 'Core',
           },
         ],
         changeList: [
@@ -119,7 +128,15 @@
           }
         ],
         indexActive: 0,
+        demo04_list:[
+          'https://ww1.sinaimg.cn/large/663d3650gy1fq66vvsr72j20p00gogo2.jpg',
+          'https://ww1.sinaimg.cn/large/663d3650gy1fq66vw1k2wj20p00goq7n.jpg',
+        ]
       }
+    },
+    components: {
+      Swiper,
+      SwiperItem
     },
     methods: {
       junpPage(item) {
@@ -128,21 +145,30 @@
       changeNav(item, index) {
         console.log(item)
         this.indexActive = index
+      },
+      designer(){
+        this.$router.push({name:"Designer"});
+      },
+      houseGroup(){
+        this.$router.push({name:"HouseGroup"});
+      },
+      Case(){
+        this.$router.push({name:"Case"});
       }
     },
     mounted() {
       this.$nextTick(() => {
-        axios.post('/api/Iapi/user/login',JSON.stringify({
-          username:'15884591848',
-          password:'123456'
-        }),{
-          headers:{
-            'Content-type': 'application/json'
-          }
-        })
-          .then(data=>{
-            console.log(data)
-          })
+        // axios.post('/api/Iapi/user/login',JSON.stringify({
+        //   username:'15884591848',
+        //   password:'123456'
+        // }),{
+        //   headers:{
+        //     'Content-type': 'application/json'
+        //   }
+        // })
+        //   .then(data=>{
+        //     console.log(data)
+        //   })
         var content = this.$refs.content;
         var lis = content.children;
         var w = 0;
@@ -157,7 +183,7 @@
           scrollX: true,
           scrollY: false,
           eventPassthrough: 'vertical'
-        })
+        });
       });
     }
   }
@@ -190,7 +216,7 @@
     -webkit-overflow-scrolling: touch;
   }
 
-  .imgBox > img {
+  .imgBox{
     width: 100%;
     height: 400/@r;
   }
@@ -361,10 +387,10 @@
 
   /*更多*/
   .more {
-    height: 114/@r;
+    height: 110/@r;
     width: 702/@r;
     margin: 0 auto;
-    padding: 40/@r 0;
+    padding: 30/@r 0;
   }
 
   .moreContent {
@@ -387,9 +413,13 @@
     float: right;
     color: #676767;
     font-size: 25/@r;
+    padding-top:8/@r;
   }
 
   /*风格、户型按钮*/
+  .changeNav{
+    margin-top:15/@r;
+  }
   .changeNav > div {
     width: 456/@r;
     height: 72/@r;
@@ -465,8 +495,26 @@
 
   /*独家策划*/
   .plan {
+    width:100%;
     height: 354/@r;
-    margin-left: 24/@r;
+    padding-left: 24/@r;
     border-bottom: 20/@r solid #f8f8f8;
+    overflow:hidden;
+  }
+  .planImg{
+    width:1300/@r;
+    heigth:200/@r;
+  }
+  .planImg li{
+    float:left;
+    width:410/@r;
+    margin-right:20/@r;
+  }
+  .planImg li img{
+    width: 100%;
+    height: 100%;
+    -webkit-border-radius: 15/@r;
+    -moz-border-radius: 15/@r;
+    border-radius: 15/@r;
   }
 </style>

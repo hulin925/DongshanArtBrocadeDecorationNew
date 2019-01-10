@@ -17,12 +17,12 @@
     <!--图片展示区-->
     <section>
       <ul class="contentList">
-        <li v-for="item,index in navList" :key="index">
+        <li v-for="item,index in navList" :key="index" @click="Details(item,index)">
           <div class="contentImg">
-            <img src="../assets/img/case/bg.png" alt="" @click.stop="Details(item,index)">
+            <img src="../assets/img/case/bg.png" alt="" >
           </div>
           <div class="introduce clearfix">
-            <a href="javascript:;" @click.stop="Details(item)">阳光水岸</a>
+            <a href="javascript:;" >阳光水岸</a>
             <strong>THE NAME OF THE WORK</strong>
           </div>
         </li>

@@ -13,23 +13,20 @@
     <!--设计信息-->
     <div class="resume">
       <div class="resumeContent clearfix">
-        <div class="right">
+        <div class="left">
           <i></i>
           <div class="info">
             <p class="name">林岚</p>
             <P class="designer">中国室内注册设计师</P>
           </div>
         </div>
-        <div class="left">
-          <router-link tag="span"  class="leftContent" :to="{name:'Designer'}">预约设计</router-link>
+        <div class="right">
+          <router-link tag="span"  class="rightContent" :to="{name:'Designer'}">预约设计</router-link>
         </div>
       </div>
     </div>
 
     <!--轮播图-->
-    <!--<div class="imgScroll">-->
-    <!--</div>-->
-
     <swiper v-model="swiperItemIndex" dots-position="center" :aspect-ratio="500/750">
       <swiper-item class="swiper-demo-img" v-for="(item, index) in demo04_list" :key="index">
         <img :src="item">
@@ -90,11 +87,11 @@
     width:100%;
     height:100%;
   }
-  .right{
+  .left{
     float:left;
     font-family: "微软雅黑";
   }
-  .right i{
+  .left i{
     float:left;
     display:block;
     width:100/@r;
@@ -118,10 +115,10 @@
   .info{
     float:left;
   }
-  .left{
+  .right{
     float:right;
   }
-  .leftContent{
+  .rightContent{
     display:block;
     width:147/@r;
     height:57/@r;
@@ -133,16 +130,6 @@
     line-height:57/@r;
     margin-top:17/@r;
   }
-
-  /*图片滚动*/
-  .imgScroll{
-    width:100%;
-    height:500/@r;
-    background:url("../assets/img/caseDetails/imgScroll.png") no-repeat;
-    -webkit-background-size: 100% 100%;
-    background-size: 100% 100%;
-  }
-
 
   /*详细内容*/
   .contentInfo{

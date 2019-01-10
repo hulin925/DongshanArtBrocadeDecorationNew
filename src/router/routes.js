@@ -7,6 +7,7 @@ import ActivityDetails from '@/views/ActivityDetails'
 import HouseGroup from '@/views/homeRouter/HouseGroup'
 import Designer from '@/views/homeRouter/Designer'
 import Core from '@/views/homeRouter/Core'
+import SignInWrap from '@/views/SignInWrap'
 
 export default [
   //首页外壳
@@ -47,22 +48,29 @@ export default [
     name: 'ActivityDetails',
     component: ActivityDetails
   },
-  //量房团
   {
-    path: '/houseGroup',
-    name: 'HouseGroup',
-    component: HouseGroup
-  },
-  //设计师
-  {
-    path: '/designer',
-    name: 'Designer',
-    component: Designer
-  },
-  //核心优势
-  {
-    path: '/core',
-    name: 'Core',
-    component: Core
-  },
+    path:'/signInWrap',
+    name:'SignInWrap',
+    component:SignInWrap,
+    children:[
+      //核心优势
+      {
+        path: '/core',
+        name: 'Core',
+        component: Core
+      },
+      //设计师
+      {
+        path: '/designer',
+        name: 'Designer',
+        component: Designer
+      },
+      //量房团
+      {
+        path: '/houseGroup',
+        name: 'HouseGroup',
+        component: HouseGroup
+      },
+    ]
+  }
 ]

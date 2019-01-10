@@ -6,8 +6,32 @@
   <div>
     <!--头部信息-->
     <header>获取预算</header>
-    <div class="contentImg">
-      <img src="../assets/img/budget/bg.png" alt="">
+
+    <!--内容区域-->
+    <div class="content">
+      <div class="contentImg">
+        <img src="../assets/img/budget/bg1.png" alt="">
+      </div>
+      <div class="contentImg2">
+        <h2>增项全免 项目透明</h2>
+        <p>装修项目严格交底验收，杜绝漏项增项，让家装更放心。</p>
+        <div>
+          <img src="../assets/img/budget/bg2.png" alt="">
+        </div>
+      </div>
+      <div class="contentImg3">
+        <h2>整装全包 施工透明</h2>
+        <p>装修包得全，每一个项目施工清晰明了，真正做到拎包入住。</p>
+        <div>
+          <img src="../assets/img/budget/bg3.png" alt="">
+        </div>
+      </div>
+    </div>
+
+    <!--免费报价-->
+    <div class="offer">
+      <span>免费报价</span>
+      <span>算算我家装修多少钱</span>
     </div>
 
     <!--注册信息-->
@@ -84,10 +108,51 @@
     background-color: #fff;
   }
 
-  .contentImg > img {
+
+  /*内容区域*/
+  .content{
     margin-top: 88/@r;
-    display: block;
     width: 100%;
+    text-align:center;
+  }
+  .contentImg{
+    height:977/@r;
+    width:100%;
+    margin-bottom:33/@r;
+  }
+  .content img {
+    width:100%;
+  }
+  .content h2{
+    font-size:38/@r;
+    font-family: "微软雅黑";
+    color:#1c1a1b;
+    font-weight:bold;
+    line-height:91/@r;
+  }
+  .content p{
+    font-size:24/@r;
+    font-family: "微软雅黑";
+    color:#333333;
+    line-height:38/@r;
+    padding:20/@r 0;
+  }
+
+  .offer{
+    width:100%;
+    height:70/@r;
+    background:#000000;
+    text-align:center;
+    margin-top:12/@r;
+    color:#fff;
+    line-height:70/@r;
+  }
+  .offer span:nth-of-type(1){
+    font-size:34/@r;
+  }
+  .offer span:nth-of-type(2){
+    font-size:28/@r;
+    padding-left:10/@r;
   }
 
   /*注册信息*/
@@ -149,7 +214,7 @@
   }
 
   .address i {
-    background: url("../assets/img/budget/name.png") no-repeat;
+    background: url("../assets/img/budget/address.png") no-repeat;
     -webkit-background-size: 100% 100%;
     background-size: 100% 100%;
   }
