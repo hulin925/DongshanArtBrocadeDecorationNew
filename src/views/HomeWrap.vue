@@ -9,7 +9,7 @@
     <footer class="clearfix">
       <div
         v-for="item,index in footerList"
-        :class="[item.className,{active: index == footerIndex}]"
+        :class="[item.className,{active: item.active}]"
         @click.stop="changeFooterNav(item,index)"
       >
         <i></i>
@@ -20,38 +20,19 @@
 </template>
 
 <script>
+  import {mapGetters} from 'vuex'//导出
   export default {
     name: 'Home',
+    computed: mapGetters([
+      'footerList'//把数据存入state
+    ]),
     data() {
       return {
-        footerList: [
-          {
-            className: 'home',
-            name: '首页',
-            routerName: 'Home'
-          },
-          {
-            className: 'caseList',
-            name: '案列',
-            routerName: 'Case'
-          },
-          {
-            className: 'budget',
-            name: '预算',
-            routerName: 'Budget'
-          },
-          {
-            className: 'afterSale',
-            name: '售后',
-            routerName: ''
-          },
-        ],
-        footerIndex: 0,
       }
     },
     methods: {
       changeFooterNav(item, index) {
-        this.footerIndex = index;
+        this.$store.commit('setDecorate',index);
         if( item.routerName ){
           this.$router.push({name: item.routerName})
         }

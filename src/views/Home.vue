@@ -7,8 +7,8 @@
     <header>东山艺锦装饰</header>
     <section>
       <div class="imgBox">
-        <swiper v-model="swiperItemIndex" dots-position="center" :aspect-ratio="450/750">
-          <swiper-item class="swiper-demo-img" v-for="(item, index) in demo04_list" :key="index">
+        <swiper dots-position="center" :aspect-ratio="414/750">
+          <swiper-item class="swiper-demo-img" v-for="(item, index) in indextop_pic_list" :key="index">
             <img :src="item">
           </swiper-item>
         </swiper>
@@ -66,9 +66,9 @@
       <!--图片滚动区域-->
       <div class="wrapper">
         <ul class="content clearfix" ref="content">
-          <li v-for="item,index in 10">
-            <img src="../assets/img/case/bg.png" alt="">
-            <span>北欧风格{{item}}</span>
+          <li v-for="item,index in styleApartmentData">
+            <img alt="" v-lazy="item.pic" :key="item.pic">
+            <span>{{item.title}}</span>
           </li>
         </ul>
       </div>
@@ -96,6 +96,7 @@
     computed: mapGetters([]),
     data() {
       return {
+        initHomeDataObj:{},
         navList: [
           {
             className: 'anLi',
@@ -118,15 +119,19 @@
             routerName: 'Core',
           },
         ],
+        indextop_pic_list:[],
         changeList: [
           {
             name: '风格',
-            routerName: ''
+            routerName: '',
+            tag:'style'
           }, {
             name: '户型',
-            routerName: ''
+            routerName: '',
+            tag:'housetype'
           }
         ],
+        styleApartmentData:[],
         indexActive: 0,
         demo04_list:[
           'https://ww1.sinaimg.cn/large/663d3650gy1fq66vvsr72j20p00gogo2.jpg',
@@ -138,13 +143,90 @@
       Swiper,
       SwiperItem
     },
+    created(){
+      this.initData()
+      this.initListData('style').then(data=>{
+        this.$nextTick(() => {
+          var content = this.$refs.content;
+          var lis = content.children;
+          var w = 0;
+          for (let i = 0; i < lis.length; i++) {
+            w += lis[i].getBoundingClientRect().width;
+          }
+
+          content.style.width = w + 'rem';
+          let scroll = new BScroll('.wrapper', {
+            startX: 0,
+            click: true,
+            scrollX: true,
+            scrollY: false,
+            eventPassthrough: 'vertical'
+          });
+        });
+      })
+    },
     methods: {
+      async initListData(tag){
+        this.styleApartmentData = await this.initStyleApartment(tag)
+      },
+      //获取 风格户型
+      initStyleApartment(tag){
+        let options = new FormData();
+        options.append('tag',tag)
+        return this.$store.dispatch('initStyleApartment',options)
+      },
+      //初始化数据
+      initData(){
+        this.$vux.loading.show({
+          text: '加载中'
+        })
+        this.$store.dispatch('initHomeData')
+          .then(obj=>{
+            this.indextop_pic_list = obj.indextop_pic_list.map(item=>{
+              return item[1]
+            })
+            this.initHomeDataObj = obj;
+            this.$vux.loading.hide()
+          },err=>{
+            this.$vux.toast.show({
+              text: err,
+              type:'cancel'
+            })
+            this.$vux.loading.hide()
+          }).catch(err=>{
+          this.$vux.toast.show({
+            text: err,
+            type:'cancel'
+          })
+          this.$vux.loading.hide()
+        })
+      },
       junpPage(item) {
-        this.$router.push({name: item.routerName})
+        this.$router.push({name: item.routerName});
+        this.$store.commit('setDecorate',1);
       },
       changeNav(item, index) {
-        console.log(item)
         this.indexActive = index
+        this.initListData(item.tag).then(()=>{
+          this.$nextTick(() => {
+            var content = this.$refs.content;
+            var lis = content.children;
+            var w = 0;
+            for (let i = 0; i < lis.length; i++) {
+              w += lis[i].getBoundingClientRect().width;
+            }
+
+            content.style.width = w + 'rem';
+            let scroll = new BScroll('.wrapper', {
+              startX: 0,
+              click: true,
+              scrollX: true,
+              scrollY: false,
+              eventPassthrough: 'vertical'
+            });
+          });
+        })
+
       },
       designer(){
         this.$router.push({name:"Designer"});
@@ -157,34 +239,7 @@
       }
     },
     mounted() {
-      this.$nextTick(() => {
-        // axios.post('/api/Iapi/user/login',JSON.stringify({
-        //   username:'15884591848',
-        //   password:'123456'
-        // }),{
-        //   headers:{
-        //     'Content-type': 'application/json'
-        //   }
-        // })
-        //   .then(data=>{
-        //     console.log(data)
-        //   })
-        var content = this.$refs.content;
-        var lis = content.children;
-        var w = 0;
-        for (let i = 0; i < lis.length; i++) {
-          w += lis[i].getBoundingClientRect().width;
-        }
 
-        content.style.width = w + 'rem';
-        let scroll = new BScroll('.wrapper', {
-          startX: 0,
-          click: true,
-          scrollX: true,
-          scrollY: false,
-          eventPassthrough: 'vertical'
-        });
-      });
     }
   }
 </script>
@@ -485,7 +540,7 @@
 
   .content > li > span {
     position: absolute;
-    top: 0;
+    top: 30/@r;
     left: 20/@r;
     right: 0;
     bottom: 0;
