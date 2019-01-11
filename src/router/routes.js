@@ -42,12 +42,6 @@ export default [
     name: 'CaseDetails',
     component: CaseDetails
   },
-  //活动详情
-  {
-    path: '/activityDetails',
-    name: 'ActivityDetails',
-    component: ActivityDetails
-  },
   {
     path:'/signInWrap',
     name:'SignInWrap',
@@ -70,6 +64,12 @@ export default [
         path: '/houseGroup',
         name: 'HouseGroup',
         component: HouseGroup
+      },
+      //活动详情
+      {
+        path: '/activityDetails',
+        name: 'ActivityDetails',
+        component: ActivityDetails
       },
     ]
   }

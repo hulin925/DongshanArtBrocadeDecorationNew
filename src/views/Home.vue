@@ -24,10 +24,10 @@
       <!--预约设计区域-->
       <div class="makeContent">
         <div class="contents clearfix">
-          <div class="contentLeft">
+          <div class="contentLeft" @click.stop="getActivityDetails">
             <p>免费报价</p>
             <p>获取家装预算</p>
-            <img src="../assets/img/home/calculator.png" alt="">
+            <img :src="initHomeDataObj.index_picone" alt="" >
           </div>
           <div class="contentRight">
             <div class="Designer" @click="designer">
@@ -38,7 +38,7 @@
             <div class="Housing" @click="houseGroup">
               <p class="firstText">预约量房团</p>
               <p class="twoText">精准、高效、先进</p>
-              <img src="../assets/img/home/apartment.png" alt="">
+              <img :src="initHomeDataObj.index_picthree" alt="">
             </div>
           </div>
         </div>
@@ -78,11 +78,13 @@
         <div class="clearfix">
           <div class="renovation more">独家策划 <span class="caseList ">/ 最优惠的活动</span></div>
         </div>
-        <ul class="planImg clearfix">
-          <li v-for="item,index in 3">
-            <img src="../assets/img/home/Renovation.png" alt="">
-          </li>
-        </ul>
+        <div class="wrapers">
+          <ul class="planImg clearfix" ref="planImgs">
+            <li v-for="item,index in 4">
+              <img src="../assets/img/home/Renovation.png" alt="">
+            </li>
+          </ul>
+        </div>
       </div>
 
     </section>
@@ -133,18 +135,35 @@
         ],
         styleApartmentData:[],
         indexActive: 0,
-        demo04_list:[
-          'https://ww1.sinaimg.cn/large/663d3650gy1fq66vvsr72j20p00gogo2.jpg',
-          'https://ww1.sinaimg.cn/large/663d3650gy1fq66vw1k2wj20p00goq7n.jpg',
-        ]
       }
     },
     components: {
       Swiper,
       SwiperItem
     },
+    mounted(){
+
+    },
     created(){
-      this.initData()
+      this.$nextTick(()=>{
+        //独家策划滑动
+        var planImgs = this.$refs.planImgs;
+        var lists = planImgs.children;
+        var w = 0;
+        for (let i = 0; i < lists.length; i++) {
+          w += lists[i].getBoundingClientRect().width;
+        }
+
+        planImgs.style.width = w + 'rem';
+        let scrolls = new BScroll('.wrapers', {
+          startX: 0,
+          click: true,
+          scrollX: true,
+          scrollY: false,
+          eventPassthrough: 'vertical'
+        });
+      });
+      this.initData();
       this.initListData('style').then(data=>{
         this.$nextTick(() => {
           var content = this.$refs.content;
@@ -205,6 +224,10 @@
         this.$router.push({name: item.routerName});
         this.$store.commit('setDecorate',1);
       },
+      getActivityDetails(){
+        // this.$store.commit('setDecorate',2);
+        this.$router.push({name:"ActivityDetails"});
+      },
       changeNav(item, index) {
         this.indexActive = index
         this.initListData(item.tag).then(()=>{
@@ -236,11 +259,9 @@
       },
       Case(){
         this.$router.push({name:"Case"});
+        this.$store.commit('setDecorate',1);
       }
     },
-    mounted() {
-
-    }
   }
 </script>
 <style scoped type="text/less" lang="less">
@@ -389,7 +410,6 @@
     position: absolute;
     left: 144/@r;
     top: 145/@r;
-    display: block;
   }
 
   .contentRight {
@@ -556,14 +576,15 @@
     border-bottom: 20/@r solid #f8f8f8;
     overflow:hidden;
   }
-  .planImg{
-    width:1300/@r;
-    heigth:200/@r;
+  .wrapers{
+    width:100%;
+    height:200/@r;
+    overflow:hidden;
   }
   .planImg li{
     float:left;
     width:410/@r;
-    margin-right:20/@r;
+    padding-right:20/@r;
   }
   .planImg li img{
     width: 100%;

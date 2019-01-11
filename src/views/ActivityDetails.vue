@@ -7,7 +7,7 @@
   <div>
     <!--头部区域-->
     <header class="clearfix">
-      <div><i></i></div>
+      <div @click="$router.go(-1)"><i></i></div>
       <span>活动详情</span>
     </header>
 

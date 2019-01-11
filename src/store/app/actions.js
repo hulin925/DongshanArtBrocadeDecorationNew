@@ -21,12 +21,12 @@ export default {
   // },
   //获取home数据
   initHomeData(store,data){
-    return new Promise((relove,reject)=>{
+      return new Promise((reslove,reject)=>{
       axios.get('http://jz.sanhedao.com.cn/index.php/Index/index')
         .then(data=>{
           let res = data.data;
           if(Number(res.code)==10000){
-            relove(res.data)
+            reslove(res.data)
           }else{
             reject(data.msg)
           }
@@ -46,5 +46,5 @@ export default {
           }
         })
     })
-  }
+  },
 }
