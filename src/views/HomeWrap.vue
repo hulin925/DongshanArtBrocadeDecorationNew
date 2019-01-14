@@ -30,6 +30,8 @@
       return {
       }
     },
+    created (){
+    },
     methods: {
       changeFooterNav(item, index) {
         this.$store.commit('setDecorate',index);

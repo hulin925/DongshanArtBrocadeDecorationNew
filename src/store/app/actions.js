@@ -47,4 +47,32 @@ export default {
         })
     })
   },
+  //获取详情大图
+  initDetails(store,formData){
+    return new Promise((relove,reject)=>{
+      axios.post('http://jz.sanhedao.com.cn/index.php/Index/getpicbytag',formData)
+        .then(data=>{
+          let res = data.data;
+          if(Number(res.code)==10000){
+            relove(res.data)
+          }else{
+            reject(data.msg)
+          }
+        })
+    })
+  },
+  //获取预约和售后
+  makeAnAppointment(store,formData){
+    return new Promise((relove,reject)=>{
+      axios.post('http://jz.sanhedao.com.cn/index.php/Index/getlink',formData)
+        .then(data=>{
+          let res = data.data;
+          if(Number(res.code)==10000){
+            relove(res.data)
+          }else{
+            reject(data.msg)
+          }
+        })
+    })
+  },
 }
