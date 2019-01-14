@@ -9,7 +9,7 @@
 
     <!--导航区域-->
     <nav>
-      <div v-for="item,index in navList" :class="{active: index == navIndex}" @click.stop="changeNav(item,index)">
+      <div v-for="item,index in navList" :class="{active: item.id==navID}" @click.stop="changeNav(item,index)">
         <strong>{{item.name}}</strong>
       </div>
     </nav>
@@ -17,15 +17,16 @@
     <!--图片展示区-->
     <section>
       <ul class="contentList">
-        <li v-for="item,index in navList" :key="index" @click="Details(item,index)">
+        <li v-for="item,index in DetailList" :key="index" @click="Details(item,index)">
           <div class="contentImg">
-            <img src="../assets/img/case/bg.png" alt="" >
+            <img alt="" v-lazy="item.pic" :key="item.pic">
           </div>
           <div class="introduce clearfix">
-            <a href="javascript:;" >阳光水岸</a>
-            <strong>THE NAME OF THE WORK</strong>
+            <a href="javascript:;">{{item.village}}</a>
+            <strong>{{item.miaoshu}}</strong>
           </div>
         </li>
+        <li v-show="!DetailList.length">暂无数据</li>
       </ul>
     </section>
 
@@ -36,44 +37,46 @@
   export default {
     data() {
       return {
-        navList: [
-          {
-            className: 'simplicity',
-            name: '现代简约',
-            routerName: 'CaseDetails'
-          },
-          {
-            className: 'classical',
-            name: '欧式古典',
-            routerName: 'CaseDetails'
-          },
-          {
-            className: 'japanese',
-            name: '现代日式',
-            routerName: 'CaseDetails'
-          },
-          {
-            className: 'chineseStyle',
-            name: '新中式',
-            routerName: 'CaseDetails'
-          },
-          {
-            className: 'french',
-            name: '法式',
-            routerName: 'CaseDetails'
-          },
-        ],
-        navIndex: 0,
+        navList: [],
+        caseList: [],
+        DetailList: [],
+        navID: ''
       }
     },
+    created() {
+      let navID = this.$route.query.id;
+      this.navList = JSON.parse(sessionStorage.getItem('navList'))
+      if (navID) {
+        this.initDetailList(navID)
+        this.navID = navID
+      } else {
+        let id = this.navList[0].id;
+        this.navID = this.navList[0].id;
+        this.initDetailList(id)
+      }
+
+
+    },
     methods: {
-      changeNav(item, index) {
-        this.$router.push({name: 'Case',query:{index:this.navIndex,id:this.navIndex+1}})
-        this.navIndex = index;
+      initDetailList(id) {
+        let options = new FormData()
+        options.append('sid', id)
+        this.$store.dispatch('initDetailList', options)
+          .then(data => {
+            this.DetailList = data;
+          },err=>{
+            this.DetailList = [];
+          })
       },
-      Details(item,index) {
-        console.log(item)
-        this.$router.push({name: item.routerName,query:{index:this.navIndex,id:this.navIndex+1}})
+      changeNav(item, index) {
+        this.initDetailList(item.id);
+
+        this.navID = item.id;
+        this.$router.push({name: 'Case',query:{id: item.id}});
+
+      },
+      Details(item, index) {
+        this.$router.push({name: 'CaseDetails', query: {id: item.id}})
       }
     }
   }
@@ -135,7 +138,7 @@
   }
 
   nav div.active {
-    font-size: 30/@r;
+    font-size: 25/@r;
     color: #e60012;
     font-weight: bold;
   }
@@ -177,5 +180,13 @@
 
   .introduce > strong {
     float: right;
+  }
+
+  .contentList > li:last-of-type {
+    font: 25/@r;
+    line-height: 4;
+    font-family: "微软雅黑";
+    text-align: center;
+    color: #666;
   }
 </style>

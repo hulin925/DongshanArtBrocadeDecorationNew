@@ -27,16 +27,34 @@
       'footerList'//把数据存入state
     ]),
     data() {
-      return {
-      }
+      return {}
     },
-    created (){
+    watch: {
+//      '$route'(to, form, next) {
+//        console.log(to)
+//      }
+    },
+    created() {
+      for (let i = 0; i < this.footerList.length; i++) {
+        if (this.footerList[i].routerName == this.$route.name) {
+          this.$store.commit('setDecorate', i);
+        }
+      }
+      console.log()
     },
     methods: {
       changeFooterNav(item, index) {
-        this.$store.commit('setDecorate',index);
-        if( item.routerName ){
+        this.$store.commit('setDecorate', index);
+        if (item.routerName) {
           this.$router.push({name: item.routerName})
+        }
+        if(index==3){
+          let options = new FormData();
+          options.append('tag','shouhou');
+          this.$store.dispatch('getMakeUrl',options)
+            .then(data=>{
+              window.location.href=data;
+            })
         }
       }
     },
@@ -61,7 +79,7 @@
     line-height: 32/@r;
     font-family: "微软雅黑";
     color: #3e3a39;
-    background-color:#fff;
+    background-color: #fff;
   }
 
   footer div {

@@ -15,10 +15,7 @@
       </div>
       <!--导航区域-->
       <nav class="clearfix">
-        <div v-for="item,index in navList"
-             :class="item.className"
-             @click.stop="junpPage(item.InterfaceConnection)"
-        >
+        <div v-for="item,index in navList" :class="item.className" @click.stop="junpPage(item)">
           <i></i>
           <strong>{{item.name}}</strong>
         </div>
@@ -30,7 +27,7 @@
           <div class="contentLeft" @click.stop="getActivityDetails">
             <p>免费报价</p>
             <p>获取家装预算</p>
-            <img :src="initHomeDataObj.index_picone" alt="">
+            <img :src="initHomeDataObj.index_picone" alt="" >
           </div>
           <div class="contentRight">
             <div class="Designer" @click="designer">
@@ -69,7 +66,7 @@
       <!--图片滚动区域-->
       <div class="wrapper">
         <ul class="content clearfix" ref="content">
-          <li v-for="item,index in styleApartmentData">
+          <li v-for="item,index in styleApartmentData" @click="clickStyleApartmentData(item)">
             <img alt="" v-lazy="item.pic" :key="item.pic">
             <span>{{item.title}}</span>
           </li>
@@ -83,8 +80,8 @@
         </div>
         <div class="wrapers">
           <ul class="planImg clearfix" ref="planImgs">
-            <li v-for="item,index in 4">
-              <img src="../assets/img/home/Renovation.png" alt="">
+            <li v-for="item,index in initDujia" :key="index">
+              <img v-lazy="item">
             </li>
           </ul>
         </div>
@@ -95,52 +92,53 @@
 </template>
 <script>
   import {mapGetters} from 'vuex'
-  import {Swiper, SwiperItem} from 'vux'
+  import { Swiper, SwiperItem } from 'vux'
 
   export default {
     computed: mapGetters([]),
     data() {
       return {
-        initHomeDataObj: {},
-        initInterface: '',
+        initHomeDataObj:{},
+        initDujia:[],
         navList: [
           {
             className: 'anLi',
             name: '客户案例',
             routerName: 'Case',
+            url:''
           },
           {
             className: 'design',
             name: '设计师',
             routerName: 'Designer',
-            InterfaceConnection: 'yuyue_pic'
+            url:''
           },
           {
             className: 'core',
             name: '核心优势',
             routerName: 'Core',
-            InterfaceConnection: 'our_pic'
+            url:''
           },
           {
             className: 'aboutMe',
             name: '关于我们',
             routerName: 'Core',
-            InterfaceConnection: 'about_pic'
+            url:''
           },
         ],
-        indextop_pic_list: [],
+        indextop_pic_list:[],
         changeList: [
           {
             name: '风格',
             routerName: '',
-            tag: 'style'
+            tag:'style'
           }, {
             name: '户型',
             routerName: '',
-            tag: 'housetype'
+            tag:'housetype'
           }
         ],
-        styleApartmentData: [],
+        styleApartmentData:[],
         indexActive: 0,
       }
     },
@@ -148,11 +146,11 @@
       Swiper,
       SwiperItem
     },
-    mounted() {
+    mounted(){
 
     },
-    created() {
-      this.$nextTick(() => {
+    created(){
+      this.$nextTick(()=>{
         //独家策划滑动
         var planImgs = this.$refs.planImgs;
         var lists = planImgs.children;
@@ -171,10 +169,23 @@
         });
       });
       this.initData();
-      this.makeAnAppointment();
-      this.initListData('style').then(data => {
+      this.initListData('style').then(data=>{
+
+         this.getDetailsImage('yuyue_pic')
+          .then(url=>{
+            this.navList[1].url = url;
+             this.getDetailsImage('our_pic')
+               .then(url=>{
+                 this.navList[2].url =url
+                  this.getDetailsImage('about_pic')
+                   .then(url=>{
+                     this.navList[3].url = url
+                 })
+               })
+
+          })
+
         this.$nextTick(() => {
-          //风格户型图片滑动
           var content = this.$refs.content;
           var lis = content.children;
           var w = 0;
@@ -194,71 +205,76 @@
       })
     },
     methods: {
-      async initListData(tag) {
+      clickStyleApartmentData(obj){
+        this.$router.push({name:'Case',query:{id:obj.id}})
+      },
+      async initListData(tag){
         this.styleApartmentData = await this.initStyleApartment(tag)
       },
+      getDetailsImage(tag){
+        let options = new FormData();
+        options.append('tag',tag)
+        return this.$store.dispatch('getDetailsImage',options)
+      },
       //获取 风格户型
-      initStyleApartment(tag) {
+      initStyleApartment(tag){
         let options = new FormData();
-        options.append('tag', tag)
-        return this.$store.dispatch('initStyleApartment', options)
+        options.append('tag',tag)
+        return this.$store.dispatch('initStyleApartment',options)
       },
-      //获取详情大图
-      initDetails(tag) {
-        let options = new FormData();
-        options.append('tag', tag)
-        return this.$store.dispatch('initDetails', options)
-      },
-      //获取预约和售后
-      makeAnAppointment() {
-        let options = new FormData();
-        options.append('tag', 'yuyue')
-        console.log(this.$store.dispatch('makeAnAppointment', options));
-        return this.$store.dispatch('makeAnAppointment', options)
-      },
+      //获取
       //初始化数据
-      initData() {
+      initData(){
         this.$vux.loading.show({
           text: '加载中'
         })
         this.$store.dispatch('initHomeData')
-          .then(obj => {
-            this.indextop_pic_list = obj.indextop_pic_list.map(item => {
+          .then(obj=>{
+            sessionStorage.setItem('navList',JSON.stringify(obj.style))
+            this.indextop_pic_list = obj.indextop_pic_list.map(item=>{
               return item[1]
             })
             this.initHomeDataObj = obj;
+            this.initDujia=obj.f_pic_list.map(item=>{
+              return item[1]
+            })
+            console.log(this.initDujia)
             this.$vux.loading.hide()
-          }, err => {
+          },err=>{
             this.$vux.toast.show({
               text: err,
-              type: 'cancel'
+              type:'cancel'
             })
             this.$vux.loading.hide()
-          }).catch(err => {
+          }).catch(err=>{
           this.$vux.toast.show({
             text: err,
-            type: 'cancel'
+            type:'cancel'
           })
           this.$vux.loading.hide()
         })
       },
       junpPage(item) {
-        // this.$router.push({name: item.routerName});
-        // this.$store.commit('setDecorate',1);
-        this.initDetails(item);
-        this.initDetails(item).then(data => {
-          this.initInterface = data;
-        })
-        // console.log(window.location);
-        // window.location.href=this.initInterface;
+        console.log(item)
+        this.$store.commit('setDecorate',1);
+        if(item.url){
+          window.location.href = item.url;
+        }else{
+          this.$router.push({name: item.routerName});
+        }
+
       },
-      getActivityDetails() {
+      getActivityDetails(){
+        this.getDetailsImage('yusuan_pic')
+          .then(url=>{
+            window.location.href = url;
+          })
         // this.$store.commit('setDecorate',2);
-        this.$router.push({name: "ActivityDetails"});
+//        this.$router.push({name:"ActivityDetails"});
       },
       changeNav(item, index) {
         this.indexActive = index
-        this.initListData(item.tag).then(() => {
+        this.initListData(item.tag).then(()=>{
           this.$nextTick(() => {
             var content = this.$refs.content;
             var lis = content.children;
@@ -279,15 +295,23 @@
         })
 
       },
-      designer() {
-        this.$router.push({name: "Designer"});
+      designer(){
+        this.getDetailsImage('yuyue_pic')
+          .then(url=>{
+            window.location.href = url;
+          })
+//        this.$router.push({name:"Designer"});
       },
-      houseGroup() {
-        this.$router.push({name: "HouseGroup"});
+      houseGroup(){
+        this.getDetailsImage('liang_pic')
+          .then(url=>{
+            window.location.href = url;
+          })
+//        this.$router.push({name:"HouseGroup"});
       },
-      Case() {
-        this.$router.push({name: "Case"});
-        this.$store.commit('setDecorate', 1);
+      Case(){
+        this.$router.push({name:"Case"});
+        this.$store.commit('setDecorate',1);
       }
     },
   }
@@ -307,7 +331,7 @@
     text-align: center;
     color: #010101;
     font-weight: bold;
-    background-color: #fff;
+    background-color:#fff;
   }
 
   section {
@@ -320,7 +344,7 @@
     -webkit-overflow-scrolling: touch;
   }
 
-  .imgBox {
+  .imgBox{
     width: 100%;
     height: 400/@r;
   }
@@ -516,14 +540,13 @@
     float: right;
     color: #676767;
     font-size: 25/@r;
-    padding-top: 8/@r;
+    padding-top:8/@r;
   }
 
   /*风格、户型按钮*/
-  .changeNav {
-    margin-top: 15/@r;
+  .changeNav{
+    margin-top:15/@r;
   }
-
   .changeNav > div {
     width: 456/@r;
     height: 72/@r;
@@ -599,26 +622,24 @@
 
   /*独家策划*/
   .plan {
-    width: 100%;
+    width:100%;
     height: 354/@r;
     padding-left: 24/@r;
     border-bottom: 20/@r solid #f8f8f8;
-    overflow: hidden;
+    overflow:hidden;
   }
-
-  .wrapers {
-    width: 100%;
-    height: 200/@r;
-    overflow: hidden;
+  .wrapers{
+    width:100%;
+    height:200/@r;
+    overflow:hidden;
   }
-
-  .planImg li {
-    float: left;
-    width: 410/@r;
-    padding-right: 20/@r;
+  .planImg li{
+    float:left;
+    width:410/@r;
+    height:200/@r;
+    padding-right:20/@r;
   }
-
-  .planImg li img {
+  .planImg li img{
     width: 100%;
     height: 100%;
     -webkit-border-radius: 15/@r;

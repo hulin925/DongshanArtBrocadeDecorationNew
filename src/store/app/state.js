@@ -23,7 +23,8 @@ export default{
       className: 'afterSale',
       name: '售后',
       routerName: '',
-      active:false
+      active:false,
+      url:''
     },
   ],
 }

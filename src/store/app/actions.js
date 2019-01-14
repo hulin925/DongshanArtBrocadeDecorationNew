@@ -1,4 +1,3 @@
-
 export default {
   // setData(store,data){
   //   return new Promise((resolve,reject)=>{
@@ -20,59 +19,86 @@ export default {
   //   })
   // },
   //获取home数据
-  initHomeData(store,data){
-      return new Promise((reslove,reject)=>{
+  initHomeData(store, data) {
+    return new Promise((reslove, reject) => {
       axios.get('http://jz.sanhedao.com.cn/index.php/Index/index')
-        .then(data=>{
+        .then(data => {
           let res = data.data;
-          if(Number(res.code)==10000){
+          if (Number(res.code) == 10000) {
             reslove(res.data)
-          }else{
+          } else {
             reject(data.msg)
           }
         })
     })
   },
   //获取风格
-  initStyleApartment(store,formData){
-    return new Promise((relove,reject)=>{
-      axios.post('http://jz.sanhedao.com.cn/index.php/Index/change',formData)
-        .then(data=>{
+  initStyleApartment(store, formData) {
+    return new Promise((relove, reject) => {
+      axios.post('http://jz.sanhedao.com.cn/index.php/Index/change', formData)
+        .then(data => {
           let res = data.data;
-          if(Number(res.code)==10000){
+          if (Number(res.code) == 10000) {
             relove(res.data)
-          }else{
+          } else {
             reject(data.msg)
           }
         })
     })
   },
-  //获取详情大图
-  initDetails(store,formData){
-    return new Promise((relove,reject)=>{
-      axios.post('http://jz.sanhedao.com.cn/index.php/Index/getpicbytag',formData)
-        .then(data=>{
+  //
+  getDetailsImage(store, formData) {
+    return new Promise((relove, reject) => {
+      axios.post('http://jz.sanhedao.com.cn/index.php/Index/getpicbytag', formData)
+        .then(data => {
           let res = data.data;
-          if(Number(res.code)==10000){
+          if (Number(res.code) == 10000) {
             relove(res.data)
-          }else{
+          } else {
             reject(data.msg)
           }
         })
     })
   },
-  //获取预约和售后
-  makeAnAppointment(store,formData){
-    return new Promise((relove,reject)=>{
-      axios.post('http://jz.sanhedao.com.cn/index.php/Index/getlink',formData)
-        .then(data=>{
+  initDetailList(store, formData) {
+    return new Promise((relove, reject) => {
+      axios.post('http://jz.sanhedao.com.cn/index.php/Index/getcaselist', formData)
+        .then(data => {
           let res = data.data;
-          if(Number(res.code)==10000){
+          if (Number(res.code) == 10000) {
             relove(res.data)
-          }else{
+          } else {
             reject(data.msg)
           }
         })
     })
   },
+  initCaseDetails(store, formData) {
+    return new Promise((relove, reject) => {
+      axios.post('http://jz.sanhedao.com.cn/index.php/Index/getcasedetail', formData)
+        .then(data => {
+          let res = data.data;
+          if (Number(res.code) == 10000) {
+            relove(res.data)
+          } else {
+            reject(data.msg)
+          }
+        })
+    })
+  },
+  //获取预约
+  getMakeUrl(store,formData){
+    return new Promise((relove, reject) => {
+      axios.post('http://jz.sanhedao.com.cn/index.php/Index/getlink', formData)
+        .then(data => {
+          let res = data.data;
+          console.log(res)
+          if (Number(res.code) == 10000) {
+            relove(res.data)
+          } else {
+            reject(data.msg)
+          }
+        })
+    })
+  }
 }

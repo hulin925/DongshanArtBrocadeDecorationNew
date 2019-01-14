@@ -7,17 +7,18 @@
   <div>
     <header>
       <div @click="$router.go(-1)"><i></i></div>
-      <span>案列详情</span>
+      <span>{{CaseDetails.title}}</span>
     </header>
 
     <!--设计信息-->
     <div class="resume">
       <div class="resumeContent clearfix">
         <div class="left">
-          <i></i>
+          <!--<i :style="{backgroundImage:CaseDetails.head_portrait}"></i>-->
+          <img src="" alt="" v-lazy="CaseDetails.head_portrait">
           <div class="info">
-            <p class="name">林岚</p>
-            <P class="designer">中国室内注册设计师</P>
+            <p class="name">{{CaseDetails.name}}</p>
+            <P class="designer">{{CaseDetails.level}}</P>
           </div>
         </div>
         <div class="right">
@@ -28,25 +29,21 @@
 
     <!--轮播图-->
     <swiper v-model="swiperItemIndex" dots-position="center" :aspect-ratio="500/750">
-      <swiper-item class="swiper-demo-img" v-for="(item, index) in demo04_list" :key="index">
+      <swiper-item class="swiper-demo-img" v-for="(item, index) in CaseDetails.pic_list" :key="index">
         <img :src="item">
       </swiper-item>
     </swiper>
 
     <!--内容信息-->
     <div class="contentInfo">
-      <p class="infoTitle">THE NAME OF THE WORK</p>
-      <p class="infoName">阳光花园</p>
-      <p class="infoDetails">阳光花园位于四川省泸州市，风景秀丽
-        ，是投资地产和休 闲养生度假酒店。
-        阳光花园占地7.5万平方米建筑面积5.5 万平方米，率70%，容积率0.8建有12栋多层及别墅
-        型产品，小区配有游泳池，温泉入户小区周围生活配套设
-        施，大型超市一应俱全。
+      <p class="infoTitle">{{CaseDetails.miaoshu}}</p>
+      <p class="infoName">{{CaseDetails.village}}</p>
+      <p class="infoDetails">{{CaseDetails.content}}
       </p>
     </div>
 
     <div class="free">
-      <span>免费获取装修报价</span>
+      <span @click.stop="getJunpUrl">免费获取装修报价</span>
     </div>
   </div>
 </template>
@@ -57,6 +54,7 @@
         name: "case-details",
       data(){
           return {
+            CaseDetails:{},
             swiperItemIndex: 1,
             demo04_list:[
               'https://ww1.sinaimg.cn/large/663d3650gy1fq66vvsr72j20p00gogo2.jpg',
@@ -67,6 +65,30 @@
       components: {
         Swiper,
         SwiperItem
+      },
+      created(){
+        let id = this.$route.query.id;
+        this.initData(id)
+        console.log(id)
+      },
+      methods:{
+        initData(id){
+          let options = new FormData()
+          options.append('id',id)
+          this.$store.dispatch('initCaseDetails',options)
+            .then(obj=>{
+              this.CaseDetails = obj
+              console.log(obj)
+            })
+        },
+        getJunpUrl(){
+          let options = new FormData();
+          options.append('tag','yuyue');
+          this.$store.dispatch('getMakeUrl',options)
+            .then(data=>{
+              window.location.href=data;
+            })
+        }
       }
     }
 </script>
@@ -91,7 +113,7 @@
     float:left;
     font-family: "微软雅黑";
   }
-  .left i{
+  .left img{
     float:left;
     display:block;
     width:100/@r;
@@ -99,6 +121,7 @@
     background:url("../assets/img/caseDetails/info.png") no-repeat;
     -webkit-background-size: 100% 100%;
     background-size: 100% 100%;
+    border-radius: 50%;
     margin-right:40/@r;
   }
   .name{
