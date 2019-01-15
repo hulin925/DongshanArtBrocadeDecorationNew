@@ -21,8 +21,8 @@
             <P class="designer">{{CaseDetails.level}}</P>
           </div>
         </div>
-        <div class="right">
-          <router-link tag="span"  class="rightContent" :to="{name:'Designer'}">预约设计</router-link>
+        <div class="right" @click="designer">
+          <span class="rightContent">预约设计</span>
         </div>
       </div>
     </div>
@@ -56,10 +56,6 @@
           return {
             CaseDetails:{},
             swiperItemIndex: 1,
-            demo04_list:[
-              'https://ww1.sinaimg.cn/large/663d3650gy1fq66vvsr72j20p00gogo2.jpg',
-              'https://ww1.sinaimg.cn/large/663d3650gy1fq66vw1k2wj20p00goq7n.jpg',
-            ]
           }
       },
       components: {
@@ -80,6 +76,18 @@
               this.CaseDetails = obj
               console.log(obj)
             })
+        },
+        getDetailsImage(tag){
+          let options = new FormData();
+          options.append('tag',tag)
+          return this.$store.dispatch('getDetailsImage',options)
+        },
+        designer(){
+          this.getDetailsImage('yuyue_pic')
+            .then(url=>{
+              window.location.href = url;
+            })
+//        this.$router.push({name:"Designer"});
         },
         getJunpUrl(){
           let options = new FormData();

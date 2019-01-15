@@ -48,7 +48,7 @@
           </div>
         </li>
       </ul>
-      <div class="Button">
+      <div class="Button" @click="changeFooterNav">
         <span>立即预约 点这里</span>
       </div>
     </div>
@@ -83,7 +83,15 @@
     methods: {
       changeInput(index) {
         this.$refs['input' + index][0].focus();
-      }
+      },
+      changeFooterNav() {
+        let options = new FormData();
+        options.append('tag','yuyue');
+        this.$store.dispatch('getMakeUrl',options)
+          .then(data=>{
+            window.location.href=data;
+          })
+      },
     }
   }
 </script>

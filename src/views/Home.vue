@@ -80,7 +80,7 @@
         </div>
         <div class="wrapers">
           <ul class="planImg clearfix" ref="planImgs">
-            <li v-for="item,index in initDujia" :key="index">
+            <li v-for="item,index in initDujia" :key="index" @click="cehua">
               <img v-lazy="item">
             </li>
           </ul>
@@ -253,6 +253,12 @@
           })
           this.$vux.loading.hide()
         })
+      },
+      cehua(){
+        this.getDetailsImage('about_pic')
+          .then(url=>{
+            window.location.href = url;
+          })
       },
       junpPage(item) {
         console.log(item)

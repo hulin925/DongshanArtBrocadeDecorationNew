@@ -9,8 +9,10 @@
 
     <!--导航区域-->
     <nav>
-      <div v-for="item,index in navList" :class="{active: item.id==navID}" @click.stop="changeNav(item,index)">
-        <strong>{{item.name}}</strong>
+      <div ref="planImgs" class="clearfix planImg">
+        <div class="Img" v-for="item,index in navList" :class="{active: item.id==navID}" @click.stop="changeNav(item,index)" :key="index">
+          <strong>{{item.name}}</strong>
+        </div>
       </div>
     </nav>
 
@@ -53,8 +55,25 @@
         let id = this.navList[0].id;
         this.navID = this.navList[0].id;
         this.initDetailList(id)
-      }
+      };
+      this.$nextTick(()=>{
+        //独家策划滑动
+        var planImgs = this.$refs.planImgs;
+        var lists = planImgs.children;
+        var w = 0;
+        for (let i = 0; i < lists.length; i++) {
+          w += lists[i].getBoundingClientRect().width;
+        }
 
+        planImgs.style.width = w + 'rem';
+        let scrolls = new BScroll('nav', {
+          startX: 0,
+          click: true,
+          scrollX: true,
+          scrollY: false,
+          eventPassthrough: 'vertical'
+        });
+      });
 
     },
     methods: {
@@ -109,16 +128,20 @@
     padding-top: 13/@r;
     width: 100%;
     line-height: 71/@r;
-    font-size: 24/@r;
+    font-size: 26/@r;
     font-family: "微软雅黑";
     color: #333333;
-    display: flex;
+    /*display: flex;*/
     padding-bottom: 26/@r;
+    overflow:hidden;
   }
-
-  nav div {
-    width: 100%;
+  .planImg{
+    padding:0 20/@r;
+  }
+  nav .Img {
+    width: 140/@r;
     float: left;
+    height:100%;
     text-align: center;
     position: relative;
   }
@@ -136,9 +159,8 @@
     border-radius: 3/@r;
     transform: translateX(-50%);
   }
-
   nav div.active {
-    font-size: 25/@r;
+    font-size: 28/@r;
     color: #e60012;
     font-weight: bold;
   }
