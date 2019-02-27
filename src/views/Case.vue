@@ -10,7 +10,8 @@
     <!--导航区域-->
     <nav>
       <div ref="planImgs" class="clearfix planImg">
-        <div class="Img" v-for="item,index in navList" :class="{active: item.id==navID}" @click.stop="changeNav(item,index)" :key="index">
+        <div class="Img" v-for="item,index in navList" :class="{active: item.id==navID}"
+             @click.stop="changeNav(item,index)" :key="index">
           <strong>{{item.name}}</strong>
         </div>
       </div>
@@ -18,18 +19,18 @@
 
     <!--图片展示区-->
     <section>
-      <ul class="contentList">
-        <li v-for="item,index in DetailList" :key="index" @click="Details(item,index)">
-          <div class="contentImg">
-            <img alt="" v-lazy="item.pic" :key="item.pic">
-          </div>
-          <div class="introduce clearfix">
-            <a href="javascript:;">{{item.village}}</a>
-            <strong>{{item.miaoshu}}</strong>
-          </div>
-        </li>
-        <li v-show="!DetailList.length">暂无数据</li>
-      </ul>
+        <ul class="contentList">
+          <li v-for="item,index in DetailList" :key="index" @click="Details(item,index)">
+            <div class="contentImg">
+              <img alt="" v-lazy="item.pic" :key="item.pic">
+            </div>
+            <div class="introduce clearfix">
+              <a href="javascript:;">{{item.village}}</a>
+              <strong>{{item.miaoshu}}</strong>
+            </div>
+          </li>
+          <li v-show="!DetailList.length">暂无数据</li>
+        </ul>
     </section>
 
   </div>
@@ -40,9 +41,8 @@
     data() {
       return {
         navList: [],
-        caseList: [],
         DetailList: [],
-        navID: ''
+        navID: '',
       }
     },
     created() {
@@ -50,13 +50,13 @@
       this.navList = JSON.parse(sessionStorage.getItem('navList'))
       if (navID) {
         this.initDetailList(navID)
-        this.navID = navID
+        this.navID = navID;
       } else {
         let id = this.navList[0].id;
         this.navID = this.navList[0].id;
         this.initDetailList(id)
       };
-      this.$nextTick(()=>{
+      this.$nextTick(() => {
         //独家策划滑动
         var planImgs = this.$refs.planImgs;
         var lists = planImgs.children;
@@ -64,7 +64,6 @@
         for (let i = 0; i < lists.length; i++) {
           w += lists[i].getBoundingClientRect().width;
         }
-
         planImgs.style.width = w + 'rem';
         let scrolls = new BScroll('nav', {
           startX: 0,
@@ -74,7 +73,6 @@
           eventPassthrough: 'vertical'
         });
       });
-
     },
     methods: {
       initDetailList(id) {
@@ -83,16 +81,14 @@
         this.$store.dispatch('initDetailList', options)
           .then(data => {
             this.DetailList = data;
-          },err=>{
+          }, err => {
             this.DetailList = [];
           })
       },
       changeNav(item, index) {
         this.initDetailList(item.id);
-
         this.navID = item.id;
-        this.$router.push({name: 'Case',query:{id: item.id}});
-
+        this.$router.push({name: 'Case', query: {id: item.id}});
       },
       Details(item, index) {
         this.$router.push({name: 'CaseDetails', query: {id: item.id}})
@@ -133,15 +129,17 @@
     color: #333333;
     /*display: flex;*/
     padding-bottom: 26/@r;
-    overflow:hidden;
+    overflow: hidden;
   }
-  .planImg{
-    padding:0 20/@r;
+
+  .planImg {
+    padding: 0 20/@r;
   }
+
   nav .Img {
     width: 140/@r;
     float: left;
-    height:100%;
+    height: 100%;
     text-align: center;
     position: relative;
   }
@@ -159,6 +157,7 @@
     border-radius: 3/@r;
     transform: translateX(-50%);
   }
+
   nav div.active {
     font-size: 28/@r;
     color: #e60012;

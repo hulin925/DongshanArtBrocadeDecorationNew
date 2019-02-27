@@ -86,13 +86,12 @@ export default {
         })
     })
   },
-  //获取预约
+  //获取售后
   getMakeUrl(store,formData){
     return new Promise((relove, reject) => {
       axios.post('http://jz.sanhedao.com.cn/index.php/Index/getlink', formData)
         .then(data => {
           let res = data.data;
-          console.log(res)
           if (Number(res.code) == 10000) {
             relove(res.data)
           } else {

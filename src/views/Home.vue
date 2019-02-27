@@ -140,6 +140,7 @@
         ],
         styleApartmentData:[],
         indexActive: 0,
+        hulin:''
       }
     },
     components: {
@@ -147,7 +148,15 @@
       SwiperItem
     },
     mounted(){
-
+      axios.get('http://jz.sanhedao.com.cn/index.php/Index/index')
+        .then((data)=>{
+          let res=data.data;
+          if(Number(res.code)==10000){
+            this.hulin=res.data;
+          }else{
+            this.hulin=res.msg;
+          }
+        })
     },
     created(){
       this.$nextTick(()=>{
@@ -170,7 +179,6 @@
       });
       this.initData();
       this.initListData('style').then(data=>{
-
          this.getDetailsImage('yuyue_pic')
           .then(url=>{
             this.navList[1].url = url;
@@ -182,7 +190,6 @@
                      this.navList[3].url = url
                  })
                })
-
           })
 
         this.$nextTick(() => {
@@ -192,7 +199,6 @@
           for (let i = 0; i < lis.length; i++) {
             w += lis[i].getBoundingClientRect().width;
           }
-
           content.style.width = w + 'rem';
           let scroll = new BScroll('.wrapper', {
             startX: 0,
@@ -207,13 +213,14 @@
     methods: {
       clickStyleApartmentData(obj){
         this.$router.push({name:'Case',query:{id:obj.id}})
+        this.$store.commit('setDecorate',1);//点击时发送一个方法，并携带参数
       },
       async initListData(tag){
         this.styleApartmentData = await this.initStyleApartment(tag)
       },
       getDetailsImage(tag){
         let options = new FormData();
-        options.append('tag',tag)
+        options.append('tag',tag);
         return this.$store.dispatch('getDetailsImage',options)
       },
       //获取 风格户型
@@ -238,7 +245,6 @@
             this.initDujia=obj.f_pic_list.map(item=>{
               return item[1]
             })
-            console.log(this.initDujia)
             this.$vux.loading.hide()
           },err=>{
             this.$vux.toast.show({
@@ -261,7 +267,6 @@
           })
       },
       junpPage(item) {
-        console.log(item)
         this.$store.commit('setDecorate',1);
         if(item.url){
           window.location.href = item.url;
@@ -279,7 +284,7 @@
 //        this.$router.push({name:"ActivityDetails"});
       },
       changeNav(item, index) {
-        this.indexActive = index
+        this.indexActive = index;
         this.initListData(item.tag).then(()=>{
           this.$nextTick(() => {
             var content = this.$refs.content;
@@ -288,7 +293,6 @@
             for (let i = 0; i < lis.length; i++) {
               w += lis[i].getBoundingClientRect().width;
             }
-
             content.style.width = w + 'rem';
             let scroll = new BScroll('.wrapper', {
               startX: 0,
@@ -319,6 +323,7 @@
         this.$router.push({name:"Case"});
         this.$store.commit('setDecorate',1);
       }
+
     },
   }
 </script>

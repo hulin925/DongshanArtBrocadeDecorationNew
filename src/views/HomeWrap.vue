@@ -21,11 +21,19 @@
 
 <script>
   import {mapGetters} from 'vuex'//导出
-  export default {
+    export default {
     name: 'Home',
     computed: mapGetters([
-      'footerList'//把数据存入state
+      'footerList',//把数据从getters拿过来
     ]),
+    //   computed:{
+    //   ...mapGetters(['footerList'])//也可以用展开运算符
+    //   },
+      // computed:{
+      //   footerList(){
+      //     return this.$store.state.footerList//最终转换成这个
+      //   }
+      // },
     data() {
       return {}
     },
@@ -40,7 +48,6 @@
           this.$store.commit('setDecorate', i);
         }
       }
-      console.log()
     },
     methods: {
       changeFooterNav(item, index) {
@@ -57,9 +64,6 @@
             })
         }
       }
-    },
-    mounted() {
-
     }
   }
 </script>
